@@ -1,5 +1,5 @@
 {
-  "name": "SheepNumbers",
+  "name": "d3",
   "version": "1.0.0",
   "description": "A repository for my attempt to create a basic D3 visualisation",
   "devDependencies": {
@@ -10,6 +10,7 @@
     "gulp-postcss": "^8.0.0",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-util": "^3.0.8",
-    "gulp-webserver": "^0.9.1"
+    "gulp-webserver": "^0.9.1",
+    "undertaker": "^1.2.1"
   }
 }
