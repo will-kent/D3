@@ -7,7 +7,8 @@ d3.csv('/js/data/SheepNumbers.csv', function(d) {
         width = 600 - margin.left - margin.right,
         barOffset = 5,
         barWidth = ((width - 80) / d.length) - (d.length + barOffset),
-        formatNum = d3.format(",");
+        formatNum = d3.format(",")
+        axisPadding = -20;
 
     var yScale,
         yAxisValues,
@@ -25,22 +26,25 @@ d3.csv('/js/data/SheepNumbers.csv', function(d) {
 
     yScale = d3.scaleLinear()
         .domain([0, d3.max(sheep)])
-        .range([0, height])
+        .range([0, height - 20])
 
     yAxisValues = d3.scaleLinear()
         .domain([0, d3.max(sheep)])
-        .range([height, 0])
+        .range([height, 20])
 
     yAxisTicks = d3.axisLeft(yAxisValues)
         .ticks(10)
 
-    xScale = d3.scaleLinear()
-
-    xAxisValues = d3.scaleLinear()
+    xScale = d3.scaleBand()
         .domain(state)
+        .range([0, width])
+
+    xAxisValues = d3.scaleBand()
+        .domain(state)
+        .range([0, (barWidth + barOffset) * state.length])
 
     xAxisTicks = d3.axisBottom(xAxisValues)
-        .tickValues(state)
+        .ticks(state.length)
 
     colours = d3.scaleOrdinal()
         .range(["#FFD700","#FF0000",'#800000',"#87CEEB","#000080","#006A4E"])
@@ -56,7 +60,7 @@ chart = d3.select('#viz').append('svg')
         .attr('width', width)
         .attr('height', height)
         .append('g')
-        .attr('transform', 'translate(80,' + margin.right +')')
+        .attr('transform', 'translate(80,' + axisPadding +')')
         .selectAll('rect').data(sheep)
         .enter().append('rect')
         .style('fill', colours)
@@ -76,11 +80,18 @@ chart = d3.select('#viz').append('svg')
             tooltip.html('<div style="font-size: 1.5rem; font-weight: bold">' +
                 formatNum(d) + '</div>'
                 )
-                .style('left', (d3.event.pageX - 40) + 'px')
-                .style('top', (d3.event.pageY -30) + 'px')
 
             d3.select(this)
-                .style('opacity', .5)
+                .style('opacity', 1)
+        })
+
+        .on('mousemove', function(d) {
+            tooltip.html('<div style="font-size: 1.5rem; font-weight: bold">' +
+                            formatNum(d) + '</div>'
+                            )
+            .style('left', (d3.event.pageX - 40) + 'px')
+            .style('top', (d3.event.pageY - 50) + 'px')
+
         })
 
         .on('mouseout', function(d) {
@@ -91,11 +102,11 @@ chart = d3.select('#viz').append('svg')
         })
 
     yGuide = d3.select('#viz svg').append('g')
-        .attr('transform', 'translate(80,0)')
+        .attr('transform', 'translate(80,' + axisPadding + ')')
         .call(yAxisTicks)
 
     xGuide = d3.select('#viz svg').append('g')
-        .attr('transform', 'translate(0, ' + (400 - margin.bottom) + ')')
+        .attr('transform', 'translate(80, ' + (400 - margin.bottom - 20) + ')')
         .call(xAxisTicks)
 
     chart.transition()
