@@ -82,7 +82,7 @@ chart = d3.select('#viz').append('svg')
                 )
 
             d3.select(this)
-                .style('opacity', 1)
+                .style('opacity', .5)
         })
 
         .on('mousemove', function(d) {
